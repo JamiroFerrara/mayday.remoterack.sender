@@ -1,6 +1,6 @@
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpStream;
-use dialoguer::{theme::ColorfulTheme, Input};
+use dialoguer::{theme::ColorfulTheme, Input, FuzzySelect};
 
 use std::error::Error;
 
@@ -11,13 +11,28 @@ pub async fn main() -> Result<(), Box<dyn Error>> {
     let result = stream.write(b"shell\n").await;
     println!("Connected as shell..; success={:?}", result.is_ok());
 
+    let selections = &[
+        "shutdown",
+        "reboot",
+        "00",
+        "01",
+        "10",
+        "11",
+        "20",
+        "21",
+        "30",
+        "31",
+    ];
+
     loop {
-        let input: String = Input::with_theme(&ColorfulTheme::default())
+        let input = FuzzySelect::with_theme(&ColorfulTheme::default())
             .with_prompt("What command do you want to send?")
-            .interact_text()
+            .default(0)
+            .items(&selections[..])
+            .interact()
             .unwrap();
 
-        let input = input + "\n";
+        let input = selections[input].to_string() + "\n";
         let _ = stream.write(input.as_bytes()).await;
     }
 }
