@@ -1,11 +1,18 @@
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpStream;
-use dialoguer::{theme::ColorfulTheme, Input, FuzzySelect};
+use dialoguer::{theme::ColorfulTheme, FuzzySelect};
+use sender::updater::*;
 
 use std::error::Error;
 
+pub fn main() -> Result<(), Box<dyn Error>> {
+    update();
+    tokio_main()?;
+    Ok(())
+}
+
 #[tokio::main]
-pub async fn main() -> Result<(), Box<dyn Error>> {
+pub async fn tokio_main() -> Result<(), Box<dyn Error>> {
     let mut stream = TcpStream::connect("172.105.66.226:8080").await?;
 
     let result = stream.write(b"shell\n").await;
