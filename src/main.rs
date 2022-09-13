@@ -11,18 +11,7 @@ pub async fn main() -> Result<(), Box<dyn Error>> {
     let result = stream.write(b"shell\n").await;
     println!("Connected as shell..; success={:?}", result.is_ok());
 
-    let selections = &[
-        "shutdown",
-        "reboot",
-        "00",
-        "01",
-        "10",
-        "11",
-        "20",
-        "21",
-        "30",
-        "31",
-    ];
+    let selections = get_selections();
 
     loop {
         let input = FuzzySelect::with_theme(&ColorfulTheme::default())
@@ -35,4 +24,20 @@ pub async fn main() -> Result<(), Box<dyn Error>> {
         let input = selections[input].to_string() + "\n";
         let _ = stream.write(input.as_bytes()).await;
     }
+}
+
+fn get_selections() -> &'static [&'static str; 10] {
+    let selections = &[
+        "shutdown",
+        "reboot",
+        "00",
+        "01",
+        "10",
+        "11",
+        "20",
+        "21",
+        "30",
+        "31",
+    ];
+    selections
 }
