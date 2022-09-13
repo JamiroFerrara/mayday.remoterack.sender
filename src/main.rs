@@ -11,13 +11,13 @@ pub async fn main() -> Result<(), Box<dyn Error>> {
     let result = stream.write(b"shell\n").await;
     println!("Connected as shell..; success={:?}", result.is_ok());
 
-    let input: String = Input::with_theme(&ColorfulTheme::default())
-        .with_prompt("What command do you want to send?")
-        .interact_text()
-        .unwrap();
+    loop {
+        let input: String = Input::with_theme(&ColorfulTheme::default())
+            .with_prompt("What command do you want to send?")
+            .interact_text()
+            .unwrap();
 
-    let input = input + "\n";
-    let _ = stream.write(input.as_bytes()).await;
-
-    Ok(())
+        let input = input + "\n";
+        let _ = stream.write(input.as_bytes()).await;
+    }
 }
